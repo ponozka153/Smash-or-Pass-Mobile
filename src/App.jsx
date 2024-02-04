@@ -127,12 +127,13 @@ function App() {
 
       return
     }
-    if (apiEndpoint[1] === "file_url") {
-      use_xhr(`https://${response["file_url"]}`);
+    if (apiEndpoint[1] === "file_url") { //pic.re
+      use_xhr(`${imageProxy}https://${response["file_url"]}`);
+      setImageURL(response[apiEndpoint[1]])
 
       return
     }
-    if (response[apiEndpoint[1]].includes("https://konachan.com") || response[apiEndpoint[1]].includes("https://files.yande.re") || response[apiEndpoint[1]].includes("https://cdn.nekos.life") || response[apiEndpoint[1]].includes("https://cdn.nekobot.xyz") || response[apiEndpoint[1]].includes("https://i.waifu.pics")) {
+    if (response[apiEndpoint[1]].includes("konachan.com") || response[apiEndpoint[1]].includes("yande.re") || response[apiEndpoint[1]].includes("nekos.life") || response[apiEndpoint[1]].includes("nekobot.xyz") || response[apiEndpoint[1]].includes("waifu.pics") || response[apiEndpoint[1]].includes("waifu.im") || response[apiEndpoint[1]].includes("nekos.fun") || response[apiEndpoint[1]].includes("purrbot.site") || response[apiEndpoint[1]].includes("michalho.cz")) { //i moje stránka for some reason tf
       use_xhr(imageProxy + response[apiEndpoint[1]]);
       setImageURL(response[apiEndpoint[1]])
 
@@ -140,6 +141,7 @@ function App() {
     }
 
     use_xhr(response[apiEndpoint[1]]);
+    setImageURL(response[apiEndpoint[1]])
   }
 
   async function handle_image_click(){
