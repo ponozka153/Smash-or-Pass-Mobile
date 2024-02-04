@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Share } from "@capacitor/share";
+import { Browser } from "@capacitor/browser";
 import Modal from "./component/modal.jsx";
 import loadingSVG from "./assets/loading.svg";
 import uploadSVG from "./assets/upload-main.svg"
@@ -132,8 +132,9 @@ function App() {
 
       return
     }
-    if (response[apiEndpoint[1]].includes("https://konachan.com") || response[apiEndpoint[1]].includes("https://files.yande.re")) {
+    if (response[apiEndpoint[1]].includes("https://konachan.com") || response[apiEndpoint[1]].includes("https://files.yande.re") || response[apiEndpoint[1]].includes("https://cdn.nekos.life") || response[apiEndpoint[1]].includes("https://cdn.nekobot.xyz") || response[apiEndpoint[1]].includes("https://i.waifu.pics")) {
       use_xhr(imageProxy + response[apiEndpoint[1]]);
+      setImageURL(response[apiEndpoint[1]])
 
       return
     }
@@ -142,9 +143,7 @@ function App() {
   }
 
   async function handle_image_click(){
-    await Share.share({
-      url: imageURL
-    })
+    await Browser.open({ url: imageURL })
   }
 
   function reacted_to_click(smash) {
