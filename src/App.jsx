@@ -22,8 +22,7 @@ function App() {
     setSmashes(Number(storedSmashes) || 0)
     setPasses(Number(storedPasses) || 0)
 
-    setSavedata(localStorage.getItem("saveData") || false) //note: v react dev thingy (npm run dev) to bude po refreshi vždycky false cause funny
-
+    setSavedata((localStorage.getItem("saveData") === "true") ? true : false) //note: v react dev thingy (npm run dev) to bude po refreshi vždycky false cause funny
     get_image()
   }, []) //[] = run only once on component load nebo tak něco
 
@@ -229,8 +228,8 @@ function App() {
         <p>Total Smashes: {smashes}</p>
         <p>Total Passes: {passes}</p>
 
-        <input title="Data save? (image size 5mb max)" type="checkbox" id="data_saver" onChange={(e) => setSavedata(e.currentTarget.checked)} checked={savedata}></input>
-        <label title="Will show SFW & NSFW" htmlFor="data_saver">Data saver</label>
+        <input title="Data save? (image size 7mb max)" type="checkbox" id="data_saver" onChange={(x) => setSavedata(x.currentTarget.checked)} checked={savedata}></input>
+        <label title="Data save? (image size 7mb max)" htmlFor="data_saver">Data saver</label>
 
         <a onClick={() => setModal(!modal)}>
           <img src={uploadSVG} className="upload" title="Upload an Image"></img>
