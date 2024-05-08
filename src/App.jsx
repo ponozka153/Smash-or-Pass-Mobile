@@ -6,6 +6,7 @@ import uploadSVG from "./assets/upload-main.svg"
 
 function App() {
   const [checkbox, setCheckbox] = useState(false);
+  const [savedata, setSavedata] = useState(false);
   const [imageURL, setImageURL] = useState("");
   const [imageB64, setImageB64] = useState("");
   const [smashes, setSmashes] = useState("");
@@ -21,6 +22,8 @@ function App() {
     setSmashes(Number(storedSmashes) || 0)
     setPasses(Number(storedPasses) || 0)
 
+    setSavedata(localStorage.getItem("saveData") || false) //note: v react dev thingy (npm run dev) to bude po refreshi vždycky false cause funny
+
     get_image()
   }, []) //[] = run only once on component load nebo tak něco
 
@@ -29,14 +32,18 @@ function App() {
     localStorage.setItem("passes", passes)
   }, [smashes, passes]) //run on smashes||passes change
 
+  useEffect(() =>{
+    localStorage.setItem("saveData", savedata)
+  }, [savedata]) //aby se nemohlo stát že po zapnutí to vytáhne fucking 30mb image 💀
+
   function get_random_api(nsfw) {
-    const sfw_apiendpoints = ["https://api.waifu.pics/sfw/waifu", "https://api.waifu.pics/sfw/neko", "https://api.waifu.im/search?included_tags=waifu&limit=1", "https://api.waifu.im/search?included_tags=maid&limit=1", "https://api.waifu.im/search?included_tags=oppai&limit=1", "https://api.waifu.im/search?included_tags=selfies&limit=1", "https://api.waifu.im/search?included_tags=uniform&limit=1", "http://api.nekos.fun:8080/api/neko", "https://pic.re/image.json", "https://nekos.best/api/v2/waifu", "https://nekos.best/api/v2/neko", "https://purrbot.site/api/img/sfw/neko/img", "https://hmtai.hatsunia.cfd/v2/neko_arts", "https://hmtai.hatsunia.cfd/v2/coffee_arts", "https://nekos.life/api/neko", "https://nekos.life/api/v2/img/neko", "https://nekos.life/api/v2/img/ngif", "https://nekobot.xyz/api/image?type=neko", "https://nekobot.xyz/api/image?type=coffee"]
-    const nsfw_apiendpoints = ["https://api.waifu.pics/nsfw/waifu", "https://api.waifu.pics/nsfw/neko", "https://api.waifu.pics/nsfw/trap", "https://api.waifu.im/search?included_tags=hentai&limit=1", "https://api.waifu.im/search?included_tags=ero&limit=1", "https://api.waifu.im/search?included_tags=ecchi&limit=1", "https://api.waifu.im/search?included_tags=milf&limit=1", "http://api.nekos.fun:8080/api/hentai", "http://api.nekos.fun:8080/api/lesbian", "http://api.nekos.fun:8080/api/lewd", "http://api.nekos.fun:8080/api/belle", "https://purrbot.site/api/img/nsfw/neko/img", "https://hmtai.hatsunia.cfd/v2/hentai", "https://hmtai.hatsunia.cfd/v2/ero", "https://hmtai.hatsunia.cfd/v2/yuri", "https://hmtai.hatsunia.cfd/v2/pantsu", "https://hmtai.hatsunia.cfd/v2/uniform", "https://hmtai.hatsunia.cfd/v2/thighs", "https://hmtai.hatsunia.cfd/v2/boobs", "https://hmtai.hatsunia.cfd/v2/nsfwNeko", "https://nekobot.xyz/api/image?type=hass", "https://nekobot.xyz/api/image?type=hmidriff", "https://nekobot.xyz/api/image?type=hneko", "https://nekobot.xyz/api/image?type=hthigh"]
+    const sfw_apiendpoints = ["https://api.waifu.pics/sfw/waifu", "https://api.waifu.pics/sfw/neko", "https://api.waifu.im/search?included_tags=waifu", "https://api.waifu.im/search?included_tags=maid", "https://api.waifu.im/search?included_tags=oppai", "https://api.waifu.im/search?included_tags=selfies", "https://api.waifu.im/search?included_tags=uniform", "http://api.nekos.fun:8080/api/neko", "https://pic.re/image.json", "https://nekos.best/api/v2/waifu", "https://nekos.best/api/v2/neko", "https://purrbot.site/api/img/sfw/neko/img", "https://hmtai.hatsunia.cfd/v2/neko_arts", "https://hmtai.hatsunia.cfd/v2/coffee_arts", "https://nekos.life/api/neko", "https://nekos.life/api/v2/img/neko", "https://nekos.life/api/v2/img/ngif", "https://nekobot.xyz/api/image?type=neko", "https://nekobot.xyz/api/image?type=coffee"]
+    const nsfw_apiendpoints = ["https://api.waifu.pics/nsfw/waifu", "https://api.waifu.pics/nsfw/neko", "https://api.waifu.pics/nsfw/trap", "https://api.waifu.im/search?included_tags=hentai", "https://api.waifu.im/search?included_tags=ero", "https://api.waifu.im/search?included_tags=ecchi", "https://api.waifu.im/search?included_tags=milf", "http://api.nekos.fun:8080/api/hentai", "http://api.nekos.fun:8080/api/lesbian", "http://api.nekos.fun:8080/api/lewd", "http://api.nekos.fun:8080/api/belle", "https://purrbot.site/api/img/nsfw/neko/img", "https://hmtai.hatsunia.cfd/v2/hentai", "https://hmtai.hatsunia.cfd/v2/ero", "https://hmtai.hatsunia.cfd/v2/yuri", "https://hmtai.hatsunia.cfd/v2/pantsu", "https://hmtai.hatsunia.cfd/v2/uniform", "https://hmtai.hatsunia.cfd/v2/thighs", "https://hmtai.hatsunia.cfd/v2/boobs", "https://hmtai.hatsunia.cfd/v2/nsfwNeko", "https://nekobot.xyz/api/image?type=hass", "https://nekobot.xyz/api/image?type=hmidriff", "https://nekobot.xyz/api/image?type=hneko", "https://nekobot.xyz/api/image?type=hthigh"]
 
     const all_apiendpoints = [...sfw_apiendpoints, ...nsfw_apiendpoints]
 
-    const random_num_for_my_api = Math.floor(Math.random() * 16)
-    const lower_than_random_num = random_num_for_my_api < 15
+    const random_num_for_my_api = Math.floor(Math.random() * 11)
+    const lower_than_random_num = random_num_for_my_api < 10
 
     if (!nsfw) {
       if (lower_than_random_num) {
@@ -85,13 +92,39 @@ function App() {
 
   }
 
-  function use_xhr(url){
+  async function data_saver_allow_to_continue(url){
+    console.warn(`savedata: ${savedata}`)
+    if(!savedata) return true
+
+    const headResponse = await fetch(url, { method: "HEAD" });
+    const contentLength = headResponse.headers.get("Content-Length");
+
+    console.warn(`${contentLength / 1024 / 1024} MB`)
+
+    if(!contentLength) return false
+    
+    const imageSizeLimit = 7 * 1024 * 1024; // 7 MB
+    if (parseInt(contentLength, 10) < imageSizeLimit) { //if its smaller than imageSizeLimit then allow it to resume
+      return true
+    }
+    return false
+  }
+
+  async function use_xhr(url){
+    var resume = await data_saver_allow_to_continue(url)
+
+    if(!resume) return get_image()
+
     setImageURL(url)
 
     var xhr = new XMLHttpRequest();
+    xhr.onerror = function(err) {
+      console.log(err);
+    };
     xhr.open("GET", url);
     xhr.responseType = "blob";
     xhr.onload = function() {
+        if(xhr.status !== 200) return get_image()
         var reader  = new FileReader();
         reader.onloadend = function() {
             setImageB64(reader.result);
@@ -112,8 +145,13 @@ function App() {
     var apiURL = apiEndpoint[0]
 
     var response;
+    var status_code;
 
     apiURL.includes("api.nekos.fun") || apiURL.includes("purrbot.site") ? response = await fetch(corsProxyURL + apiURL) : response = await fetch(apiURL)
+
+    status_code = response.status
+    if(status_code !== 200) return get_image()
+
     response = await response.json()
     console.log(response)
 
@@ -133,12 +171,13 @@ function App() {
 
       return
     }
-    if (response[apiEndpoint[1]].includes("konachan.com") || response[apiEndpoint[1]].includes("yande.re") || response[apiEndpoint[1]].includes("nekos.life") || response[apiEndpoint[1]].includes("nekobot.xyz") || response[apiEndpoint[1]].includes("waifu.pics") || response[apiEndpoint[1]].includes("waifu.im") || response[apiEndpoint[1]].includes("nekos.fun") || response[apiEndpoint[1]].includes("purrbot.site") || response[apiEndpoint[1]].includes("michalho.cz")) { //i moje stránka for some reason tf
+    if (response[apiEndpoint[1]].includes("konachan.com") || response[apiEndpoint[1]].includes("yande.re") || response[apiEndpoint[1]].includes("nekos.life") || response[apiEndpoint[1]].includes("nekobot.xyz") || response[apiEndpoint[1]].includes("waifu.pics") || response[apiEndpoint[1]].includes("waifu.im") || response[apiEndpoint[1]].includes("nekos.fun") || response[apiEndpoint[1]].includes("purrbot.site") || response[apiEndpoint[1]].includes("discord") || response[apiEndpoint[1]].includes("michalho.cz")) { //i moje stránka for some reason tf
       use_xhr(imageProxy + response[apiEndpoint[1]]);
       setImageURL(response[apiEndpoint[1]])
 
       return
     }
+
 
     use_xhr(response[apiEndpoint[1]]);
     setImageURL(response[apiEndpoint[1]])
@@ -189,6 +228,9 @@ function App() {
 
         <p>Total Smashes: {smashes}</p>
         <p>Total Passes: {passes}</p>
+
+        <input title="Data save? (image size 5mb max)" type="checkbox" id="data_saver" onChange={(e) => setSavedata(e.currentTarget.checked)} checked={savedata}></input>
+        <label title="Will show SFW & NSFW" htmlFor="data_saver">Data saver</label>
 
         <a onClick={() => setModal(!modal)}>
           <img src={uploadSVG} className="upload" title="Upload an Image"></img>
