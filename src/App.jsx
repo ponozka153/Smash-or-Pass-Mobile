@@ -35,9 +35,14 @@ function App() {
     localStorage.setItem("saveData", savedata)
   }, [savedata]) //aby se nemohlo stát že po zapnutí to vytáhne fucking 30mb image 💀
 
+
+  const corsProxyURL = "https://michalho.cz/proxy/?url=" //Has to use proxy protože CORS :3
+  const imageProxy = "https://michalho.cz/proxy/image.php?url="
+
+
   function get_random_api(nsfw) {
-    const sfw_apiendpoints = ["https://api.waifu.pics/sfw/waifu", "https://api.waifu.pics/sfw/neko", "https://api.waifu.im/search?included_tags=waifu", "https://api.waifu.im/search?included_tags=maid", "https://api.waifu.im/search?included_tags=oppai", "https://api.waifu.im/search?included_tags=selfies", "https://api.waifu.im/search?included_tags=uniform", "http://api.nekos.fun:8080/api/neko", "https://pic.re/image.json", "https://nekos.best/api/v2/waifu", "https://nekos.best/api/v2/neko", "https://purrbot.site/api/img/sfw/neko/img", "https://hmtai.hatsunia.cfd/v2/neko_arts", "https://hmtai.hatsunia.cfd/v2/coffee_arts", "https://nekos.life/api/neko", "https://nekos.life/api/v2/img/neko", "https://nekos.life/api/v2/img/ngif", "https://nekobot.xyz/api/image?type=neko", "https://nekobot.xyz/api/image?type=coffee"]
-    const nsfw_apiendpoints = ["https://api.waifu.pics/nsfw/waifu", "https://api.waifu.pics/nsfw/neko", "https://api.waifu.pics/nsfw/trap", "https://api.waifu.im/search?included_tags=hentai", "https://api.waifu.im/search?included_tags=ero", "https://api.waifu.im/search?included_tags=ecchi", "https://api.waifu.im/search?included_tags=milf", "http://api.nekos.fun:8080/api/hentai", "http://api.nekos.fun:8080/api/lesbian", "http://api.nekos.fun:8080/api/lewd", "http://api.nekos.fun:8080/api/belle", "https://purrbot.site/api/img/nsfw/neko/img", "https://hmtai.hatsunia.cfd/v2/hentai", "https://hmtai.hatsunia.cfd/v2/ero", "https://hmtai.hatsunia.cfd/v2/yuri", "https://hmtai.hatsunia.cfd/v2/pantsu", "https://hmtai.hatsunia.cfd/v2/uniform", "https://hmtai.hatsunia.cfd/v2/thighs", "https://hmtai.hatsunia.cfd/v2/boobs", "https://hmtai.hatsunia.cfd/v2/nsfwNeko", "https://nekobot.xyz/api/image?type=hass", "https://nekobot.xyz/api/image?type=hmidriff", "https://nekobot.xyz/api/image?type=hneko", "https://nekobot.xyz/api/image?type=hthigh"]
+    const sfw_apiendpoints = ["https://api.waifu.pics/sfw/waifu", "https://api.waifu.pics/sfw/neko", "https://api.waifu.im/search?included_tags=waifu", "https://api.waifu.im/search?included_tags=maid", "https://api.waifu.im/search?included_tags=oppai", "https://api.waifu.im/search?included_tags=selfies", "https://api.waifu.im/search?included_tags=uniform", "https://pic.re/image.json", "https://nekos.best/api/v2/waifu", "https://nekos.best/api/v2/neko", "https://purrbot.site/api/img/sfw/neko/img", "https://nekos.life/api/neko", "https://nekos.life/api/v2/img/neko", "https://nekos.life/api/v2/img/ngif", "https://nekobot.xyz/api/image?type=neko", "https://nekobot.xyz/api/image?type=coffee", "https://nekos.best/api/v2/neko", "https://api.nekosapi.com/v3/images/random?limit=1&rating=safe", "https://api.nekosapi.com/v3/images/random?limit=1&rating=suggestive"]
+    const nsfw_apiendpoints = ["https://api.waifu.pics/nsfw/waifu", "https://api.waifu.pics/nsfw/neko", "https://api.waifu.pics/nsfw/trap", "https://api.waifu.im/search?included_tags=hentai", "https://api.waifu.im/search?included_tags=ero", "https://api.waifu.im/search?included_tags=ecchi", "https://api.waifu.im/search?included_tags=milf", "https://purrbot.site/api/img/nsfw/neko/img", "https://nekobot.xyz/api/image?type=hass", "https://nekobot.xyz/api/image?type=hmidriff", "https://nekobot.xyz/api/image?type=hneko", "https://nekobot.xyz/api/image?type=hthigh", "https://nekobot.xyz/api/image?type=hentai", "https://nekobot.xyz/api/image?type=hkitsune", "https://nekobot.xyz/api/image?type=hanal", "https://nekobot.xyz/api/image?type=paizuri", "https://nekobot.xyz/api/image?type=tentacle", "https://nekobot.xyz/api/image?type=hboobs", "https://api.nekosapi.com/v3/images/random?limit=1&rating=borderline", "https://api.nekosapi.com/v3/images/random?limit=1&rating=explicit"]
 
     const all_apiendpoints = [...sfw_apiendpoints, ...nsfw_apiendpoints]
 
@@ -62,27 +67,29 @@ function App() {
 
   function get_apis_image_url_name(choosen_endpoint) {
     const random_num = Math.floor(Math.random() * choosen_endpoint.length)
-    const choosen_url = choosen_endpoint[random_num];
+    let choosen_url = choosen_endpoint[random_num];
     let result_endpointdongle;
 
     if (choosen_url.includes("api.waifu.pic")) {
       result_endpointdongle = "url";
     } else if (choosen_url.includes("api.waifu.im")) {
       result_endpointdongle = "images[0] > url";
-    } else if (choosen_url.includes("pic.re")) {
-      result_endpointdongle = "file_url";
+    } else if (choosen_url.includes("api.nekosapi.com")){
+      result_endpointdongle = "items[0] > image_url"
     } else if (choosen_url.includes("nekos.best")) {
       result_endpointdongle = "results[0] > url";
+    } else if (choosen_url.includes("pic.re")) {
+      result_endpointdongle = "file_url";
     } else if (choosen_url.includes("purrbot.site")) {
       result_endpointdongle = "link";
-    } else if (choosen_url.includes("hmtai.hatsunia.cfd")) {
-      result_endpointdongle = "url";
     } else if (choosen_url === "https://nekos.life/api/neko") {
       result_endpointdongle = "neko";
     } else if (choosen_url.includes("nekos.life")) {
       result_endpointdongle = "url";
-    } else if (choosen_url.includes("ekobot.xyz")) {
+    } else if (choosen_url.includes("nekobot.xyz")) {
       result_endpointdongle = "message";
+    } else if (choosen_url.includes("neko.best")) {
+      result_endpointdongle = "url"
     } else {
       result_endpointdongle = "image";
     }
@@ -95,7 +102,30 @@ function App() {
     console.warn(`savedata: ${savedata}`)
     if(!savedata) return true
 
-    const headResponse = await fetch(url, { method: "HEAD" });
+    var headResponse
+
+    try {
+      headResponse = await fetch(url, { method: "HEAD"});
+    } catch (error){
+      
+      console.error("Fetch for HEADERS error: " + error.message)
+      console.table(error)
+
+      if(error.message === "Failed to fetch"){ //probs CORS error, try with corsProxy
+
+        try {
+          headResponse = await fetch(corsProxyURL + url)
+          console.warn("second try with CORS")
+
+        } catch (error2){
+          console.error("Fetch for HEADERS error even with CORS: " + error2.message)
+          console.log("Gg alkane, idk co teď :(")
+        }
+
+      }
+    }
+
+
     const contentLength = headResponse.headers.get("Content-Length");
 
     console.warn(`${contentLength / 1024 / 1024} MB`)
@@ -109,17 +139,14 @@ function App() {
     return false
   }
 
-  async function use_xhr(url){
+  async function use_xhr(url){ //XHR abych mohl trackovat status, idk jak bych to udělal když bych dal do <img> jenom link na ten image
     var resume = await data_saver_allow_to_continue(url)
 
-    if(!resume) return get_image()
+    if(!resume) return get_image() //if its below the set file size maximum, try again
 
     setImageURL(url)
 
     var xhr = new XMLHttpRequest();
-    xhr.onerror = function(err) {
-      console.log(err);
-    };
     xhr.open("GET", url);
     xhr.responseType = "blob";
     xhr.onload = function() {
@@ -128,28 +155,54 @@ function App() {
         reader.onloadend = function() {
             setImageB64(reader.result);
             setLoading(false)
+            console.warn("SUCCESS")
         }
-        reader.readAsDataURL(xhr.response);
+      reader.readAsDataURL(xhr.response);
     }
     xhr.send();
+    xhr.onerror = function() {
+      console.warn("XHR failed, probably because of CORS, trying again")
+      xhr.open("GET", imageProxy + url)
+      xhr.send()
+    };
   }
 
   async function get_image() {
     setLoading(true)
 
     var apiEndpoint = get_random_api(checkbox)
-    var corsProxyURL = "https://michalho.cz/proxy/?url=" //Has to use proxy protože jedno api je http takže cors se může posrat, will also be on github
-    var imageProxy = "https://michalho.cz/proxy/image.php?url=" //Has to be used if the img src is in https://konachan.com cause for some reason Edge explorer wont render the picture in <img>, bruh
+
     console.log(apiEndpoint)
     var apiURL = apiEndpoint[0]
 
     var response;
     var status_code;
 
-    apiURL.includes("api.nekos.fun") || apiURL.includes("purrbot.site") ? response = await fetch(corsProxyURL + apiURL) : response = await fetch(apiURL)
+    try {
+      response = await fetch(apiURL)
+    } catch (error){
+
+      console.error("Fetch error: " + error.message)
+      console.table(error)
+
+      if(error.message === "Failed to fetch"){ //probs CORS error, try with corsProxy
+
+        try {
+          response = await fetch(corsProxyURL + apiURL)
+          console.warn("second try with CORS")
+
+        } catch (error2){
+          console.error("Fetch error even with CORS: " + error2.message)
+          console.log("Gg alkane, jedem znova")
+          return get_image()
+
+        }
+
+      }
+    }
 
     status_code = response.status
-    if(status_code !== 200) return get_image()
+    if(status_code !== 200) return get_image() //znovu zkusit dostat image
 
     response = await response.json()
     console.log(response)
@@ -164,22 +217,19 @@ function App() {
 
       return
     }
-    if (apiEndpoint[1] === "file_url") { //pic.re
-      use_xhr(`${imageProxy}https://${response["file_url"]}`);
-      setImageURL(response[apiEndpoint[1]])
+    if (apiEndpoint[1] === "items[0] > image_url"){
+      use_xhr(response.items[0].image_url);
 
       return
     }
-    if (response[apiEndpoint[1]].includes("konachan.com") || response[apiEndpoint[1]].includes("yande.re") || response[apiEndpoint[1]].includes("nekos.life") || response[apiEndpoint[1]].includes("nekobot.xyz") || response[apiEndpoint[1]].includes("waifu.pics") || response[apiEndpoint[1]].includes("waifu.im") || response[apiEndpoint[1]].includes("nekos.fun") || response[apiEndpoint[1]].includes("purrbot.site") || response[apiEndpoint[1]].includes("discord") || response[apiEndpoint[1]].includes("michalho.cz")) { //i moje stránka for some reason tf
-      use_xhr(imageProxy + response[apiEndpoint[1]]);
-      setImageURL(response[apiEndpoint[1]])
+     if (apiEndpoint[1] === "file_url") { //pic.re, it returns the url without https://
+       use_xhr(`https://${response["file_url"]}`);
 
-      return
-    }
+       return
+     }
 
 
     use_xhr(response[apiEndpoint[1]]);
-    setImageURL(response[apiEndpoint[1]])
   }
 
   async function handle_image_click(){
@@ -205,7 +255,7 @@ function App() {
       <div>
         <img onClick={() => handle_image_click()} src={imageB64} alt="Random Anime IMG" />
         {loading ? (
-          <img src={loadingSVG} className="loading"></img>
+          <img crossorigin="anonymous" src={loadingSVG} className="loading"></img>
         ) : (
           <div className="loading">
 
